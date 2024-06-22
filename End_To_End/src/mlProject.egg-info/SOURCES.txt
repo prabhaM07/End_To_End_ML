@@ -1,0 +1,21 @@
+LICENSE
+README.md
+setup.py
+src/mlProject.egg-info/PKG-INFO
+src/mlProject.egg-info/SOURCES.txt
+src/mlProject.egg-info/dependency_links.txt
+<<<<<<< HEAD
+src/mlProject.egg-info/top_level.txt
+=======
+src/mlProject.egg-info/top_level.txt
+src/music_popularity_prediction/__init__.py
+src/music_popularity_prediction/components/__init__.py
+src/music_popularity_prediction/config/__init__.py
+src/music_popularity_prediction/config/configuration.py
+src/music_popularity_prediction/constants/__init__.py
+src/music_popularity_prediction/entity/__init__.py
+src/music_popularity_prediction/entity/config_entity.py
+src/music_popularity_prediction/pipeline/__init__.py
+src/music_popularity_prediction/utils/__init__.py
+src/music_popularity_prediction/utils/common.py
+>>>>>>> 6451e23 (requirements added)
