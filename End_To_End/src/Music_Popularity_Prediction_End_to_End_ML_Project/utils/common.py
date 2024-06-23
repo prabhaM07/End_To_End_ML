@@ -1,91 +1,85 @@
-"""
-utils used for frequently used code can be write under utils folder
-"""
 import os
-from box.exceptions import BoxValueError
 import yaml
-from Music_Popularity_Prediction_End_to_End_ML_Project import logger
 import json
 import joblib
-from ensure import ensure_annotations
 from box import ConfigBox
-from box import Path
-
+from Music_Popularity_Prediction_End_to_End_ML_Project import logger
 from typing import Any
 
 
-@ensure_annotations
-def read_yaml(path_to_yaml: Path) -> ConfigBox:
-    
-    # return type is ConfigBox
-    """ reads yaml file and returns
-    
-    Args: 
-        path_to_yaml (str) : path like input
-        
+def read_yaml(path_to_yaml: str) -> ConfigBox:
+    """Reads YAML file and returns as ConfigBox.
+
+    Args:
+        path_to_yaml (str): Path to YAML file.
+
     Raises:
-        ValueError: if yaml file is empty
-        e: empty file
-    
-    Return:
-        ConfigBox: ConfigBox type
+        ValueError: If YAML file is empty or cannot be loaded.
+
+    Returns:
+        ConfigBox: ConfigBox object containing YAML content.
     """
     try:
-        with open(path_to_yaml) as yaml_file:
+        with open(path_to_yaml, 'r') as yaml_file:
             content = yaml.safe_load(yaml_file)
-            logger.info(f"yaml file: {path_to_yaml} loadded successfully")
+            if not content:
+                raise ValueError("YAML file is empty")
+            logger.info(f"YAML file '{path_to_yaml}' loaded successfully")
             return ConfigBox(content)
-    except BoxValueError:
-        raise ValueError("yaml file is empty")
+    except yaml.YAMLError as e:
+        raise ValueError(f"Error parsing YAML file '{path_to_yaml}': {e}")
     except Exception as e:
-        raise e
+        raise ValueError(f"Failed to load YAML file '{path_to_yaml}': {e}")
 
-@ensure_annotations
-def create_directories(path_to_directories : list,verbose=True):
-    """create list of directories
-    Args:
-        path_to_directories (list):list of path of directories
-    """  
-    for path in path_to_directories:
-        os.makedirs(path,exist_ok = True)
-        if verbose:
-            logger.info(f"created directory at:{path}")
 
-@ensure_annotations
-def save_json(path: Path,data: dict):
-    """save json data
+def create_directories(path_to_directories: list[str], verbose: bool = True):
+    """Create directories given a list of paths.
+
     Args:
-        path (Path):path to json file
-        data (dict): data to be saved in json file
+        path_to_directories (list[str]): List of paths to create directories.
+        verbose (bool, optional): Whether to log verbose messages. Defaults to True.
     """
-    with open(path,"W") as f:
-        json.dump(data,f,indent=4)
-        
-    logger.info(f"json file saved at: {path}")
+    for path in path_to_directories:
+        os.makedirs(path, exist_ok=True)
+        if verbose:
+            logger.info(f"Created directory at: {path}")
 
-@ensure_annotations
-def load_bin(path: Path)-> Any:
-    """load binary data
+
+def save_json(path: str, data: dict):
+    """Save data to a JSON file.
 
     Args:
-        path (Path): path to binary file
+        path (str): Path to JSON file.
+        data (dict): Data to be saved.
+    """
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
+        
+    logger.info(f"JSON file saved at: {path}")
+
+
+def load_bin(path: str) -> Any:
+    """Load binary data from a file.
+
+    Args:
+        path (str): Path to the binary file.
 
     Returns:
-        Any: object stored in the file
+        Any: Object stored in the file.
     """
     data = joblib.load(path)
-    logger.info(f"binary file loaded from: {path}")
+    logger.info(f"Binary file loaded from: {path}")
     return data
 
-@ensure_annotations
-def get_size(path:Path)-> str:
-    """get size in KB
+
+def get_size(path: str) -> str:
+    """Get file size in KB.
 
     Args:
-        path (Path): path of the file
+        path (str): Path of the file.
 
     Returns:
-        str: size in KB
+        str: Size of the file in KB (formatted string).
     """
-    size_in_kb = round(os.path.getsize(path)/1024)
+    size_in_kb = round(os.path.getsize(path) / 1024)
     return f"~ {size_in_kb} KB"
